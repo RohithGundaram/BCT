@@ -46,3 +46,4 @@ contract SecureVault is Ownable {
     function emergencyWithdraw() external onlyOwner {
         payable(owner()).transfer(address(this).balance);
     }
+}

@@ -1,5 +1,6 @@
-pragma solidity ^0.5.0;
-// pragma experimental ABIEncoderV2;
+// SPDX-License-Identifier: GPL-3.0
+pragma solidity >0.6.0;
+pragma experimental ABIEncoderV2;
 
 contract digiLocker {
     //structures and other variable declrn
@@ -35,6 +36,8 @@ contract digiLocker {
     ///////////////////////-- events here -- ///////////////////////////////////
     event registeredUserEvent(string _email,userType utype,address indexed _useraddress);
     event uploadDocumentEvent(bytes32 indexed docid, bytes32 docHash, address indexed user_addr);
+    event sharedDocumentEvent(bytes32 indexed docid, address indexed docOwner,address indexed sharedWith, uint8 permission);
+    event verifyDocumentEvent(bytes32 indexed docid, address indexed docOwner, address indexed sharedWith);
     
     
     
@@ -81,7 +84,15 @@ contract digiLocker {
         emit uploadDocumentEvent(docId, docHash, msg.sender);
         return true;
     }
+    function shareDocumentwithUser(bytes32 docid, uint8 permission,address _requester) public{
+        //  address  _owner, = msg.sender
+        emit sharedDocumentEvent(docid, msg.sender, _requester, permission);
+    }
 
+    function verifyUserDocument(bytes32 docid, address  _owner) public{
+        // , address _requester = msg.sender
+        emit verifyDocumentEvent(docid,_owner,msg.sender);
+    }
     
 }
 

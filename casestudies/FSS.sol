@@ -27,14 +27,16 @@ contract TradeFinanceContract {
     }
 
     function makePayment() public onlyImporter payable {
-    require(!paymentComplete, "Payment has already been made.");
-    require(msg.value == tradeAmount, "Payment amount does not match the trade amount.");
+        require(!paymentComplete, "Payment has already been made.");
+        // require(msg.value == tradeAmount, "Payment amount does not match the trade amount.");
+        // Transfer the payment to the exporter.
+        payable(exporter).transfer(msg.value);
+        paymentComplete = true;
+        emit PaymentMade(msg.value);    
+    }
 
-    // Transfer the payment to the exporter.
-    payable(exporter).transfer(msg.value);
-
-    paymentComplete = true;
-
-    emit PaymentMade(msg.value);    
+    // Debugging function to check the contract state
+    function getContractState() public view returns (address, address, uint, bool) {
+        return (exporter, importer, tradeAmount, paymentComplete);
     }
 }
